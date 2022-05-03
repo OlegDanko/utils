@@ -63,7 +63,7 @@ using key_type = int;
 using val_type = int;
 
 #define BI_MAP_IMPL(class_name, key_name, key_type, val_name, val_type) \
-    class class_name : BiMap<key_type, val_type> {                      \
+    class class_name : ::utl_prf::BiMap<key_type, val_type> {           \
         using Base = BiMap<key_type, val_type>;                         \
     public:                                                             \
         std::optional<key_type> get_##key_name(val_type id) {           \
