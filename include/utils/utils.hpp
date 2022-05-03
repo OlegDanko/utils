@@ -22,10 +22,13 @@ bool is_present(const V& val, CNT& container) {
     return container.find(val) != container.end();
 }
 
+#define IF_PRESENT(VAL, CNT, IT) if(auto IT = CNT.find(VAL); IT != CNT.end())
+
 template<typename V, typename CNT, typename CALLBACK>
 void if_present(const V& val, CNT& container, CALLBACK&& callback) {
-    if(auto it = container.find(val); it != container.end())
+    IF_PRESENT(val, container, it)
         callback(it);
 }
+
 
 }
