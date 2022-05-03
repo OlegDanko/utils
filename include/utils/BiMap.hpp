@@ -86,5 +86,5 @@ using val_type = int;
         bool val_name##_exists(val_type id) {                           \
             return Base::val_exists(id);                                \
         }                                                               \
-    };
+    }
 }
