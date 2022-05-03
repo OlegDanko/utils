@@ -2,6 +2,7 @@
 #define BIMAP_H
 
 #include <unordered_map>
+#include <optional>
 
 namespace utl_prf {
 
@@ -10,10 +11,10 @@ class BiMap {
     std::unordered_map<K, V> key_to_val;
     std::unordered_map<V, K> val_to_key;
     template<typename From, typename To>
-    To get(From f, std::unordered_map<From, To>& map) {
+    std::optional<To> get(From f, std::unordered_map<From, To>& map) {
         if(auto it = map.find(f); it != map.end())
-            return it->second;
-        return 0;
+            return {it->second};
+        return std::nullopt;
     }
 
     template<typename From, typename To>
@@ -26,11 +27,11 @@ class BiMap {
     }
 
 public:
-    K get_key(V id) {
+    std::optional<K> get_key(V id) {
         return get(id, val_to_key);
     }
 
-    V get_val(K id) {
+    std::optional<V> get_val(K id) {
         return get(id, key_to_val);
     }
 
@@ -62,32 +63,31 @@ using key_type = int;
 using val_type = int;
 
 #define BI_MAP_IMPL(class_name, key_name, key_type, val_name, val_type) \
-    class class_name : BiMap<key_type, val_type> { \
-        using Base = BiMap<key_type, val_type>;    \
-    public:                                        \
-        key_type get_##key_name(val_type id) {     \
-            return Base::get_key(id);              \
-        }                                          \
-        val_type get_##val_name(key_type id) {     \
-            return Base::get_val(id);              \
-        }                                          \
-        void remove_##key_name(key_type id) {      \
-            Base::remove_key(id);                  \
-        }                                          \
-        void remove_##val_name(val_type id) {      \
-            Base::remove_val(id);                  \
-        }                                          \
-        void add(key_type k, val_type v) {         \
-            Base::add(k, v);                       \
-        }                                          \
-        bool key_name##_exists(key_type id) {      \
-            return Base::key_exists(id);           \
-        }                                          \
-        bool val_name##_exists(val_type id) {      \
-            return Base::val_exists(id);           \
-        }                                          \
+    class class_name : BiMap<key_type, val_type> {                      \
+        using Base = BiMap<key_type, val_type>;                         \
+    public:                                                             \
+        std::optional<key_type> get_##key_name(val_type id) {           \
+            return Base::get_key(id);                                   \
+        }                                                               \
+        std::optionalval_type> get_##val_name(key_type id) {            \
+            return Base::get_val(id);                                   \
+        }                                                               \
+        void remove_##key_name(key_type id) {                           \
+            Base::remove_key(id);                                       \
+        }                                                               \
+        void remove_##val_name(val_type id) {                           \
+            Base::remove_val(id);                                       \
+        }                                                               \
+        void add(key_type k, val_type v) {                              \
+            Base::add(k, v);                                            \
+        }                                                               \
+        bool key_name##_exists(key_type id) {                           \
+            return Base::key_exists(id);                                \
+        }                                                               \
+        bool val_name##_exists(val_type id) {                           \
+            return Base::val_exists(id);                                \
+        }                                                               \
     };
-
 }
 
 #endif // BIMAP_H
