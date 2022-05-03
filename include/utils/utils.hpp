@@ -30,5 +30,4 @@ void if_present(const V& val, CNT& container, CALLBACK&& callback) {
         callback(it);
 }
 
-
 }

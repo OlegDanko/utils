@@ -68,7 +68,7 @@ using val_type = int;
         std::optional<key_type> get_##key_name(val_type id) {           \
             return Base::get_key(id);                                   \
         }                                                               \
-        std::optional<val_type> get_##val_name(key_type id) {            \
+        std::optional<val_type> get_##val_name(key_type id) {           \
             return Base::get_val(id);                                   \
         }                                                               \
         void remove_##key_name(key_type id) {                           \

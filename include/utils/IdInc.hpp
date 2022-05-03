@@ -1,42 +1,56 @@
 #pragma once
 
-#include <set>
+#include <unordered_set>
+#include <queue>
+#include <limits>
 #include "utils.hpp"
 
 namespace utl_prf {
 
 template<typename T>
 class IdInc {
-    std::set<T> reuse;
-    std::set<T> reserved;
+    std::queue<T> reuse_queue;
+    std::unordered_set<T> reuse_set;
+    std::unordered_set<T> reserved;
     T highest = 0;
 public:
     T get_next() {
-        if(reuse.size() == 0) {
-            while (is_present(++highest, reserved)) {}
+        while (highest.val < std::numeric_limits<T>::max() && is_present(++highest, reserved))
             return highest;
+
+        if(reuse_queue.empty())
+            throw std::runtime_error("IdInc has run out of IDs");
+
+        while(is_present(reuse_queue.front(), reserved))
+              reuse_queue.pop();
+
+        auto id = reuse_queue.front();
+
+        IF_PRESENT(id, reuse_set, it) {
+            reuse_set.erase(it);
         }
 
-        auto it = reuse.begin();
-        auto id = *it;
-        reuse.erase(it);
+        reuse_queue.pop();
         return id;
     }
     void restore(T id) {
-        if(id < highest)
-            reuse.insert(id);
+        if(id >= highest)
+            return;
+
+        reuse_set.insert(id);
+        reuse_queue.push(id);
     }
-    bool reserve(T id) {
+    void reserve(T id) {
         if(id > highest) {
             reserved.insert(id);
-            return true;
+            return;
         }
 
-        IF_PRESENT(id, reuse, it) {
-            reuse.clear(it);
-            return true;
+        IF_PRESENT(id, reuse_set, it) {
+            reuse_set.clear(it);
+            return;
         }
-        return false;
+        throw std::runtime_error("IdInc could not reserve id");
     }
 };
 
