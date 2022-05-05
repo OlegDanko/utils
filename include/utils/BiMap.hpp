@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <optional>
+#include "utils.hpp"
 
 namespace utl_prf {
 
@@ -11,15 +12,15 @@ class BiMap {
     std::unordered_map<V, K> val_to_key;
     template<typename From, typename To>
     std::optional<To> get(From f, std::unordered_map<From, To>& map) {
-        if(auto it = map.find(f); it != map.end())
+        IF_PRESENT(f, map, it)
             return {it->second};
         return std::nullopt;
     }
 
     template<typename From, typename To>
     void remove(From id, std::unordered_map<From, To>& map_a, std::unordered_map<To, From>& map_b) {
-        if(auto it = map_a.find(id); it != map_a.end()) {
-            if(auto it_ = map_b.find(it->second); it_ != map_b.end())
+        IF_PRESENT(id, map_a, it) {
+            IF_PRESENT(it->second, map_b, it_)
                 map_b.erase(it_);
             map_a.erase(it);
         }

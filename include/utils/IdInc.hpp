@@ -15,7 +15,9 @@ class IdInc {
     T highest = 0;
 public:
     T get_next() {
-        while (highest.val < std::numeric_limits<T>::max() && is_present(++highest, reserved))
+        while (highest < std::numeric_limits<T>::max() && is_present(++highest, reserved)) {}
+
+        if(highest < std::numeric_limits<T>::max())
             return highest;
 
         if(reuse_queue.empty())
