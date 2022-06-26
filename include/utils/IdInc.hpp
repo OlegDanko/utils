@@ -49,7 +49,7 @@ public:
         }
 
         IF_PRESENT(id, reuse_set, it) {
-            reuse_set.clear(it);
+            reuse_set.erase(it);
             return;
         }
         throw std::runtime_error("IdInc could not reserve id");

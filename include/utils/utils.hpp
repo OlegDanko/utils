@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <functional>
+#include <optional>
 
 #define IF_PRESENT(VAL, CNT, IT) if(auto IT = CNT.find(VAL); IT != CNT.end())
 #define with(x) if(x; true)
@@ -40,5 +41,9 @@ struct pair_maker<std::pair<V1, V2>> {
     static std::pair<V1, V2> make(V1&& v1, V2&& v2) { return std::make_pair<V1, V2>(std::move(v1), std::move(v2)); }
 };
 
+template<typename T>
+void apply_opt(T& target, const std::optional<T>& source) {
+    target = source.value_or(target);
+}
 
 }
