@@ -7,6 +7,15 @@
 #define IF_PRESENT(VAL, CNT, IT) if(auto IT = CNT.find(VAL); IT != CNT.end())
 #define with(x) if(x; true)
 
+
+template<typename, typename>
+struct tpl_type_cat;
+
+template<typename ...Args_1, typename ...Args_2>
+struct tpl_type_cat<std::tuple<Args_1...>, std::tuple<Args_2...>> {
+    using tpl = std::tuple<Args_1..., Args_2...>;
+};
+
 namespace utl_prf {
 
 template<typename T>
