@@ -55,4 +55,17 @@ void apply_opt(T& target, const std::optional<T>& source) {
     target = source.value_or(target);
 }
 
+
+template<typename IT, typename FN>
+void for_neighbors(IT it_this, IT it_end, FN fn) {
+    auto it_next = std::next(it_this);
+    while(it_next != it_end) {
+
+        fn(it_this, it_next);
+
+        it_this = it_next;
+        it_next = std::next(it_this);
+    }
+}
+
 }
