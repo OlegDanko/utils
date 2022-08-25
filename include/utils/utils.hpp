@@ -68,4 +68,26 @@ void for_neighbors(IT it_this, IT it_end, FN fn) {
     }
 }
 
+template<typename IT_A, typename IT_B, typename FN>
+void for_corresponding(IT_A begin_a, IT_A end_a, IT_B begin_b, IT_B end_b, FN fn) {
+    while(begin_a!=end_a && begin_b!=end_b) {
+        fn(begin_a, begin_b);
+        ++begin_a;
+        ++begin_b;
+    }
+}
+
+template<typename CTN_A, typename CTN_B, typename FN>
+void for_corresponding(CTN_A a, CTN_B b, FN fn) {
+    for_corresponding(a.begin(), a.end(), b.begin(), b.end(), fn);
+}
+
+inline float rand_f() {
+    return ((float) rand()) / (float) RAND_MAX * 2.0f - 1.0f;
+}
+
+inline float rand_f0_1() {
+    return ((float) rand()) / (float) RAND_MAX;
+}
+
 }
