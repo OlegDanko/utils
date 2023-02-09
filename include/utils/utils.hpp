@@ -91,4 +91,14 @@ inline float rand_f0_1() {
     return ((float) rand()) / (float) RAND_MAX;
 }
 
+template<typename IT>
+class iterable {
+    IT begin_;
+    IT end_;
+public:
+    iterable(IT b, IT e) : begin_(b), end_(e) {}
+    IT begin() {return begin_;}
+    IT end() {return end_;}
+};
+
 }
