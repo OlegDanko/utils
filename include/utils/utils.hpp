@@ -6,6 +6,7 @@
 
 #define IF_PRESENT(VAL, CNT, IT) if(auto IT = CNT.find(VAL); IT != CNT.end())
 #define with(x) if(x; true)
+#define repeat(x) for(auto repeat_i = 0; repeat_i < x; repeat_i++)
 
 
 template<typename, typename>
