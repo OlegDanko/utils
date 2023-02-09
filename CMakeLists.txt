@@ -6,8 +6,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(utils STATIC
-  include/utils.hpp
-)
+#add_library(utils STATIC
+#  include/utils.hpp
+#)
 
-target_compile_definitions(utils PRIVATE UTILS_LIBRARY)
+#target_compile_definitions(utils PRIVATE UTILS_LIBRARY)
