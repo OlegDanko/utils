@@ -6,8 +6,14 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#add_library(utils STATIC
-#  include/utils.hpp
-#)
+add_library(utils STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/utils/ticket_storage/TicketDispenser.cpp
+)
+
+target_link_directories(
+    utils
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/utils
+)
 
 #target_compile_definitions(utils PRIVATE UTILS_LIBRARY)

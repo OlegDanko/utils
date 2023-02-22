@@ -1,66 +1,10 @@
 #pragma once
 #include <memory>
 #include <unordered_map>
-#include <atomic>
-#include "../utils.hpp"
+#include "TicketDispenser.hpp"
 #include "../Protected.hpp"
 
 namespace utl_prf {
-
-class OnDestroyedListener {
-public:
-    virtual void on_destroyed(size_t) = 0;
-};
-
-
-class TicketDispenser : OnDestroyedListener {
-    std::atomic_size_t ticker_id_counter{1};
-    std::function<void(size_t)> destroyed_callback_fn{nullptr};
-
-    TicketDispenser(const TicketDispenser&) = delete;
-    TicketDispenser(TicketDispenser&&) = delete;
-    TicketDispenser& operator=(const TicketDispenser&) = delete;
-    TicketDispenser& operator=(TicketDispenser&&) = delete;
-
-public:
-    TicketDispenser() = default;
-    class Ticket {
-        Ticket(OnDestroyedListener& listener, size_t id)
-            : on_destroy_listener(listener)
-            , id(id)
-        {}
-        OnDestroyedListener& on_destroy_listener;
-        const size_t id;
-    public:
-        friend class TicketDispenser;
-        ~Ticket() {
-            on_destroy_listener.on_destroyed(id);
-        }
-    };
-    using ticket_s_ptr_t = std::shared_ptr<const Ticket>;
-
-    std::shared_ptr<const Ticket> create() {
-        // can't make_shared because constructor is private :<
-        return ticket_s_ptr_t(new Ticket(
-                    *static_cast<OnDestroyedListener*>(this),
-                    ticker_id_counter.fetch_add(1)
-                    ));
-    }
-    bool check(const Ticket& t) {
-        return static_cast<OnDestroyedListener*>(this) == &t.on_destroy_listener;
-    }
-    size_t get_id(const Ticket& t) {
-        return t.id;
-    }
-
-    void set_destroyed_callback(std::function<void(size_t)> fn) {
-        destroyed_callback_fn = fn;
-    }
-    void on_destroyed(size_t id) override {
-        if(destroyed_callback_fn)
-            destroyed_callback_fn(id);
-    }
-};
 
 template<typename T>
 class TicketStorage{
