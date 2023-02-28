@@ -43,27 +43,27 @@ struct type_apply<T, types<Ts...>> {
 };
 
 template<typename, typename...>
-struct is_unique;
+struct is_type_unique;
 template<typename T>
-struct is_unique<T> { static constexpr bool val = true; };
+struct is_type_unique<T> { static constexpr bool val = true; };
 template<typename T, typename T1, typename ...Ts>
-struct is_unique<T, T1, Ts...> { static constexpr bool val = (!std::is_same<T, T1>::value) && is_unique<T, Ts...>::val; };
+struct is_type_unique<T, T1, Ts...> { static constexpr bool val = (!std::is_same<T, T1>::value) && is_type_unique<T, Ts...>::val; };
 template<typename T, typename... Ts>
-static constexpr bool is_unique_v = is_unique<T, Ts...>::val;
+static constexpr bool is_type_unique_v = is_type_unique<T, Ts...>::val;
 
 template<typename, typename...>
-struct is_present;
+struct is_type_present;
 template<typename T>
-struct is_present<T> { static constexpr bool val = false; };
+struct is_type_present<T> { static constexpr bool val = false; };
 template<typename T, typename T1, typename ...Ts>
-struct is_present<T, T1, Ts...> { static constexpr bool val = (std::is_same<T, T1>::value) || is_present<T, Ts...>::val; };
+struct is_type_present<T, T1, Ts...> { static constexpr bool val = (std::is_same<T, T1>::value) || is_type_present<T, Ts...>::val; };
 
 template<typename T, typename ...Ts>
-struct is_present<T, types<Ts...>> { static constexpr bool val = is_present<T, Ts...>::val; };
+struct is_type_present<T, types<Ts...>> { static constexpr bool val = is_type_present<T, Ts...>::val; };
 
 
 template<typename T, typename... Ts>
-static constexpr bool is_present_v = is_present<T, Ts...>::val;
+static constexpr bool is_type_present_v = is_type_present<T, Ts...>::val;
 
 
 template<typename ... Ts>
@@ -72,7 +72,7 @@ struct unique_types {
     struct collector;
     template<typename CollectedPrev, typename A>
     struct collector<CollectedPrev, A> {
-        using types_ = typename std::conditional<!is_present_v<A, CollectedPrev>,
+        using types_ = typename std::conditional<!is_type_present_v<A, CollectedPrev>,
                                                  typename cat_types<CollectedPrev, A>::types_,
                                                  CollectedPrev>::type;
     };
@@ -91,31 +91,31 @@ struct size_ {
 };
 
 template<typename T, typename ...Ts>
-struct index_of {
+struct index_of_type {
     template<typename A, typename ...As>
-    struct index_of_;
+    struct index_of_type_;
     template<typename A>
-    struct index_of_<A> {
+    struct index_of_type_<A> {
         static constexpr size_t i = 0;
     };
     template<typename A, typename A1, typename ...As>
-    struct index_of_<A, A1, As...> {
+    struct index_of_type_<A, A1, As...> {
         static constexpr size_t i =
                 std::conditional<std::is_same_v<A, A1>,
                                  size_<0>,
-                                 size_<1 + index_of_<A, As...>::i>>::type::val;
+                                 size_<1 + index_of_type_<A, As...>::i>>::type::val;
     };
 
-    static_assert(is_present_v<T, Ts...>, "In index_of, type is not found in the type list");
-    static constexpr size_t i = index_of_<T, Ts...>::i;
+    static_assert(is_type_present_v<T, Ts...>, "In index_of_type, type is not found in the type list");
+    static constexpr size_t i = index_of_type_<T, Ts...>::i;
 };
 
 template<typename T, typename ...Ts>
-struct index_of<T, types<Ts...>> {
-    static constexpr size_t i = index_of<T, Ts...>::i;
+struct index_of_type<T, types<Ts...>> {
+    static constexpr size_t i = index_of_type<T, Ts...>::i;
 };
 
 template<typename T, typename ...Ts>
-constexpr size_t index_of_v = index_of<T, Ts...>::i;
+constexpr size_t index_of_type_v = index_of_type<T, Ts...>::i;
 
 }

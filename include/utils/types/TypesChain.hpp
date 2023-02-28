@@ -32,7 +32,7 @@ struct TypesChain<T> {
 
 template<typename T, typename ...Ts>
 struct TypesChain<T, Ts...> : TypesChain<T> {
-    static_assert(is_unique_v<T, Ts...>, "Types in TypeChain must be unique");
+    static_assert(is_type_unique_v<T, Ts...>, "Types in TypeChain must be unique");
     using Base_t = TypesChain<T>;
     TypesChain<Ts...> chain;
 
@@ -50,6 +50,7 @@ struct TypesChain<T, Ts...> : TypesChain<T> {
 
     template<typename A>
     A& get() {
+        static_assert(is_type_present_v<A, T, Ts...>, "Requested type is not present in the chain");
         if constexpr (std::is_same<A, T>::value) {
             return Base_t::arg;
         } else {
@@ -58,6 +59,7 @@ struct TypesChain<T, Ts...> : TypesChain<T> {
     }
     template<typename A>
     const A& get() const {
+        static_assert(is_type_present_v<A, T, Ts...>, "Requested type is not present in the chain");
         if constexpr (std::is_same<A, T>::value) {
             return Base_t::arg;
         } else {
