@@ -10,7 +10,7 @@ add_library(utils STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/utils/ticket_storage/TicketDispenser.cpp
 )
 
-target_link_directories(
+target_include_directories(
     utils
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include/utils
