@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <queue>
 #include <limits>
+#include <stdexcept>
 #include "utils.hpp"
 
 namespace utl_prf {
