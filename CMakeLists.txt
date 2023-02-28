@@ -15,5 +15,3 @@ target_link_directories(
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include/utils
 )
-
-#target_compile_definitions(utils PRIVATE UTILS_LIBRARY)
